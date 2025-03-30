@@ -1,18 +1,23 @@
 
-import { ShaderCodes } from "./ShaderCodes.js";
-import { Geometry } from "./Geometry.js";
-import { Material } from "./Material.js";
-import { RenderObject } from "./RenderObject.js";
+import { WebGPUDriver } from "./WebGPUDriver";
+import { ShaderCodes } from "./ShaderCodes";
+import { Geometry } from "./Geometry";
+import { Material } from "./Material";
+import { RenderObject } from "./RenderObject";
 
 /**
  * Model类用于存储复杂模型
  */
-export default class Model{
-   
+export class Model{
+    driver: WebGPUDriver;
+    device: GPUDevice;
+    context: GPUCanvasContext;
+    renderObjects: RenderObject[];
+
     /**
      * @param {WebGPUDriver} driver WebGPU驱动
      */
-    constructor(driver){
+    constructor(driver: WebGPUDriver){
         this.driver = driver;
         this.device = driver.device;
         this.context = driver.context;
@@ -40,6 +45,7 @@ export default class Model{
         for (let i = 0; i < this.renderObjects.length; i++) {
             this.renderObjects[i].render(device, context);
         }
+        requestAnimationFrame(this.render.bind(this));
     }
 
    

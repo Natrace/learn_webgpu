@@ -2,10 +2,13 @@
  * Geometry类存储模型的几何数据
  */
 export class Geometry{
+    vertices: Float32Array | null;
+    vertexBuffer: GPUBuffer | null;
+    
     /** 
      * @param {Float32Array} vertices 顶点数据
      */
-    constructor(vertices){
+    constructor(vertices: Float32Array) {
         this.vertices = vertices;
         this.vertexBuffer = null;
     }
@@ -15,8 +18,8 @@ export class Geometry{
      * @param {GPUDevice} device GPU 设备
      * @returns {void}
      */
-    uploadToGpu(device){
-        if (this.vertexBuffer) {
+    uploadToGpu(device: GPUDevice): void {
+        if (!this.vertices || this.vertexBuffer) {
             return;
         }
 

@@ -1,30 +1,34 @@
+import { Geometry } from "./Geometry";
+import { Material } from "./Material";
 
 /**
  * RenderObject 可渲染对象
  */
 export class RenderObject{
+    geometry: Geometry;
+    material: Material;
 
     /**
      * @param {Geometry} geometry 几何体
      * @param {Material} material 材质
      */
-    constructor(geometry, material){
+    constructor(geometry: Geometry, material: Material){
         this.geometry = geometry;
         this.material = material;
     }
     
     
-    render(device, context){
+    render(device: GPUDevice, context: GPUCanvasContext): void {
         // 创建命令编码器
         const commandEncoder = device.createCommandEncoder();
 
         // 创建渲染通道描述符
-        const renderPassDescriptor = {
+        const renderPassDescriptor: GPURenderPassDescriptor = {
             colorAttachments: [{
                 view: context.getCurrentTexture().createView(),
                 loadOp: "clear",
                 storeOp: "store",
-                clearColor: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
+                clearValue : { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
             }],
         };
 

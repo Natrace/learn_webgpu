@@ -1,31 +1,38 @@
 /**
  * WebGPU驱动类
  */
-export default class WebGPUDriver{
+export class WebGPUDriver{
+    adapter!: GPUAdapter;
+    device!: GPUDevice;
+    context!: GPUCanvasContext;
+    canvas: HTMLCanvasElement;
+    canvasFormat!: GPUTextureFormat;
     /**
      * @param {string} canvasId 画布元素的id
      */
-    constructor(canvasId){
-        this.adapter = null;
-        this.device = null;
-        this.context = null;
-        this.canvas = document.getElementById(canvasId);
-        this.canvasFormat = null;
+    constructor(canvasId: string){
+        this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     }
 
     /**
      * 初始化WebGPU
      */
-    async Init(){
+    public async Init(): Promise<void>{
         if (!navigator.gpu) {
-            throw Error("WebGPU not supported.");
+            throw new Error("WebGPU not supported.");
         }
-        this.adapter = await navigator.gpu.requestAdapter();
+        this.adapter = await navigator.gpu.requestAdapter() as GPUAdapter;
         if (!this.adapter) {
-            throw Error("Couldn't request WebGPU adapter.");
+            throw new Error("Couldn't request WebGPU adapter.");
         }
         this.device = await this.adapter.requestDevice();
-        this.context = this.canvas.getContext('webgpu');
+        if (!this.device) {
+            throw new Error("Couldn't request WebGPU device.");
+        }
+        this.context = this.canvas.getContext('webgpu') as GPUCanvasContext;
+        if (!this.context) {
+            throw new Error("Couldn't get WebGPU context.");
+        }
         this.canvasFormat = navigator.gpu.getPreferredCanvasFormat();
         this.context.configure({
             device: this.device,
@@ -38,7 +45,11 @@ export default class WebGPUDriver{
      * @param {string} shaderCode 着色器代码
      * @returns {GPUShaderModule} 着色器模块
      */
-    CreateShaderModule(shaderCode){
+    CreateShaderModule(shaderCode: string): GPUShaderModule {
+        if (!this.device) {
+            throw new Error("Device not initialized.");
+        }
+        // 创建着色器模块
         return this.device.createShaderModule({ code: shaderCode });
     }
 
@@ -49,9 +60,12 @@ export default class WebGPUDriver{
      * @param {GPUVertexBufferLayout[]} vertexBuffers 顶点缓冲区
      * @returns {GPURenderPipeline} 渲染管线
      */
-    async CreatePipeline(vertexShaderModule, fragmentShaderModule, vertexBuffers){
+    async CreatePipeline(vertexShaderModule: GPUShaderModule, fragmentShaderModule: GPUShaderModule
+        , vertexBuffers: GPUVertexBufferLayout[]): Promise<GPURenderPipeline> {
+            if (!this.canvasFormat) 
+                throw new Error("canvasFormat not initialized.");
         // 创建渲染管线
-        const pipelineDescriptor = {
+        const pipelineDescriptor : GPURenderPipelineDescriptor = {
             vertex: {
               module: vertexShaderModule,
               entryPoint: 'main',
@@ -69,6 +83,8 @@ export default class WebGPUDriver{
             },
             layout: 'auto'
           };
+        if (!this.device)
+            throw new Error("Device not initialized.");
         const pipeline = this.device.createRenderPipelineAsync(pipelineDescriptor);
         return pipeline;
     }
