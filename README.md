@@ -4,18 +4,26 @@
 	npm install --save-dev webgpu 
 	npm install --save-dev vite
 
-## 编译
+
+
+## vite编译
+	编译规则见 vite.config.js
+	将./core文件夹的ts文件编译到/build文件夹,目标为js文件
+### 单次编译
+	npx vite build
+### 启动vite
+	cd build
+	npx vite
+	http://localhost:5173/main.html
+
+## npx编译
+	编译规则见tsconfig.json
+	将./core文件夹的ts文件编译到./dist文件夹,目标为js文件
+	该方法编译后的js,在import语句中，不会自动加上.js后缀，需配合webpack等工具配合，存在缺陷
+### 单次编译
 	npx tsc
-	将core文件夹的ts文件编译到dist文件夹,目标为js文件
-### 监听ts变化
+### 监听ts变化，自动编译
 	npx tsc --watch
-
-### 使用vite
-	npx vite build // 编译
-	npx vite //启动
-	修改dist/main.html的js引用为相对路径：src="./assets/main-wVDR788a.js"
-	http://localhost:5173/dist/main.html
-
-## 访问
-	main.js中引用dist的js文件
+### 访问
+	启动 LiveServer
 
