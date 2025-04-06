@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "ESNEXT"],
-    "types": [ "@webgpu/types" ],
+    "types": [ "@webgpu/types", "vite/client"],
     
     "outDir": "./dist",
     "rootDir": ".",

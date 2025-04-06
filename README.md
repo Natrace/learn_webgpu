@@ -3,7 +3,6 @@
 	npm install --save-dev typescript
 	npm install --save-dev webgpu
 	npm install --save-dev vite
-	npm install --save-dev vite-plugin-string
 
 ## 二、vite编译
 	编译规则见 vite.config.js

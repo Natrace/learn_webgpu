@@ -33,7 +33,7 @@ export class Model{
         const geometry = new Geometry(vertices);
         geometry.uploadToGpu(this.device);
 
-        const material = new Material(ShaderCodes.vertexShaderCode, ShaderCodes.fragmentShaderCode);
+        const material = new Material(ShaderCodes['triangle.vert'], ShaderCodes['triangle.frag']);
         await material.CreatePipeline(this.driver);
 
         const renderObject = new RenderObject(geometry, material);
